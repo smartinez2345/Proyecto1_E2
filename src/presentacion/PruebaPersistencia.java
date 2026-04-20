@@ -9,7 +9,6 @@ public class PruebaPersistencia {
         System.out.println("  PRUEBA 6: PERSISTENCIA");
         System.out.println("====================================\n");
 
-        // Crear café y datos
         Cafe cafe = new Cafe(20);
         GestorUsuarios gu = new GestorUsuarios(cafe);
         GestorInventario gi = new GestorInventario(cafe);
@@ -23,7 +22,6 @@ public class PruebaPersistencia {
         String archivo = "data/cafe.dat";
         cafe.guardarEstado(archivo);
 
-        // Cargar en otro objeto
         Cafe cafeCargado = Cafe.cargarEstado(archivo);
         if (cafeCargado != null) {
             System.out.println("\n--- Estado cargado ---");

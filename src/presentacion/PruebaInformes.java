@@ -21,21 +21,17 @@ public class PruebaInformes {
         Bebida cafeBebida = new Bebida("Café", 4000, false, true);
         gi.agregarProductoCafeteria(cafeBebida, 10);
         
-        // Crear una mesa para la venta
         Mesa mesa = gp.crearMesa(2, false, false, c);
 
-        // Realizar venta de cafetería
         Venta v1 = gv.iniciarVentaCafeteria(c);
         gv.agregarProductoAVenta(v1, cafeBebida, 2, mesa);
         gv.finalizarVenta(v1);
 
-        // Venta de juegos (usando método agregarJuegoAVenta)
         Venta v2 = gv.iniciarVentaJuegos(c);
         Juego catan = new Juego("Catan", 1995, "Kosmos", "TABLERO", 3, 4, 10, false);
         gv.agregarJuegoAVenta(v2, catan, 1, 120000);
         gv.finalizarVenta(v2);
 
-        // Informes
         gv.informeDiario(new Date());
 
         Calendar cal = Calendar.getInstance();
