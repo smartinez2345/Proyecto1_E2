@@ -1,6 +1,10 @@
 package modelo;
 
-public class InventarioCafeteria {
+import java.io.Serializable;
+
+public class InventarioCafeteria implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
     private ProductoCafeteria producto;
     private int stock;
 

@@ -46,4 +46,10 @@ public class PruebaPrestamo {
         gestorPrestamos.mostrarPrestamo(prestamo);
 
         System.out.println("\n--- Cerrando préstamo ---");
-        gestorPrestamos.cerrarPrestamo(pre
+        gestorPrestamos.cerrarPrestamo(prestamo);
+
+        System.out.println("====================================");
+        System.out.println("  PRUEBA 2 COMPLETADA");
+        System.out.println("====================================");
+    }
+}

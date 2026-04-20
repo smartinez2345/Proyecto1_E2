@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Pasteleria extends ProductoCafeteria {
+    private static final long serialVersionUID = 1L;
+    
     private List<String> alergenos;
 
     public Pasteleria(String nombre, double precio) {
@@ -15,7 +17,7 @@ public class Pasteleria extends ProductoCafeteria {
 
     public void agregarAlergeno(String alergeno) {
         alergenos.add(alergeno);
-    }
+    }	
 
     public boolean tieneAlergeno(String alergeno) {
         return alergenos.contains(alergeno);

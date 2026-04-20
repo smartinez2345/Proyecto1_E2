@@ -1,10 +1,13 @@
 package modelo;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Venta {
+public class Venta implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
     private static final double IVA = 0.19;
     private static final double IMP_CONSUMO = 0.08;
 

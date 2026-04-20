@@ -1,15 +1,18 @@
 package modelo;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Prestamo {
+public class Prestamo implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
     private Date fechaPrestamo;
     private Date fechaDevolucion;
     private String estado;
     private List<Juego> juegos;
-    private Mesa mesa;
+    private Mesa mesa;  // puede ser null para préstamo de empleado
 
     public Prestamo(Mesa mesa) {
         this.fechaPrestamo = new Date();

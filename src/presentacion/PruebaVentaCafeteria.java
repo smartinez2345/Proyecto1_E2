@@ -36,4 +36,27 @@ public class PruebaVentaCafeteria {
 
         System.out.println("\n--- Caso 2: Bebida alcohólica con menores ---");
         Mesa mesaMenores = gestorPrestamos.crearMesa(3, false, true, cliente);
-        Venta venta2 = gestorVentas.iniciarVenta
+        Venta venta2 = gestorVentas.iniciarVentaCafeteria(cliente);
+        gestorVentas.agregarProductoAVenta(venta2, cerveza, 1, mesaMenores);
+        gestorVentas.finalizarVenta(venta2);
+
+        System.out.println("\n--- Caso 3: Bebida caliente con juego de acción ---");
+        // Primero creamos una mesa y prestamos un juego de acción
+        Mesa mesaAccion = gestorPrestamos.crearMesa(2, false, false, cliente);
+        Juego twister = new Juego("Twister", 1966, "Hasbro", "ACCION", 2, 6, 5, false);
+        gestorInventario.agregarJuegoAPrestamo(twister, 1);
+        Prestamo pAccion = gestorPrestamos.iniciarPrestamo(mesaAccion);
+        gestorPrestamos.agregarJuegoAPrestamo(pAccion, twister);
+        
+        Venta venta3 = gestorVentas.iniciarVentaCafeteria(cliente);
+        boolean resultado = gestorVentas.agregarProductoAVenta(venta3, cafe1, 1, mesaAccion);
+        if (resultado) {
+            gestorVentas.finalizarVenta(venta3);
+        }
+        gestorPrestamos.cerrarPrestamo(pAccion);
+
+        System.out.println("====================================");
+        System.out.println("  PRUEBA 3 COMPLETADA");
+        System.out.println("====================================");
+    }
+}

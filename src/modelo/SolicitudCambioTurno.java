@@ -1,6 +1,10 @@
 package modelo;
 
-public class SolicitudCambioTurno {
+import java.io.Serializable;
+
+public class SolicitudCambioTurno implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
     private Empleado solicitante;
     private Empleado reemplazo;
     private String estado;

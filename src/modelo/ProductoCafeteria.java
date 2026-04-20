@@ -1,6 +1,10 @@
 package modelo;
 
-public abstract class ProductoCafeteria {
+import java.io.Serializable;
+
+public abstract class ProductoCafeteria implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
     private String nombre;
     private double precio;
 

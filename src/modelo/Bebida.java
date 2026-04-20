@@ -1,6 +1,8 @@
 package modelo;
 
 public class Bebida extends ProductoCafeteria {
+    private static final long serialVersionUID = 1L;
+    
     private boolean esAlcoholica;
     private boolean esCaliente;
 
@@ -14,7 +16,7 @@ public class Bebida extends ProductoCafeteria {
     public boolean isEsCaliente() { return esCaliente; }
 
     public boolean esValidaParaMesa(Mesa mesa) {
-        if (esAlcoholica && (mesa.isTieneMenures18() || mesa.isTieneMenures5())) return false;
+        if (esAlcoholica && (mesa.isTieneMenores18() || mesa.isTieneMenores5())) return false;
         return true;
     }
 

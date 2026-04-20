@@ -1,6 +1,10 @@
 package modelo;
 
-public class Juego {
+import java.io.Serializable;
+
+public class Juego implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
     private String nombre;
     private int publicacion;
     private String empresaMatriz;
@@ -39,8 +43,8 @@ public class Juego {
     public boolean esAptoParaMesa(Mesa mesa) {
         int personas = mesa.getCantidadPersonas();
         if (personas < minJugadores || personas > maxJugadores) return false;
-        if (edadMinima >= 18 && mesa.isTieneMenures18()) return false;
-        if (edadMinima >= 5 && mesa.isTieneMenures5()) return false;
+        if (edadMinima >= 18 && mesa.isTieneMenores18()) return false;
+        if (edadMinima >= 5 && mesa.isTieneMenores5()) return false;
         return true;
     }
 

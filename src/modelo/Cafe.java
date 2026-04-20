@@ -1,9 +1,12 @@
 package modelo;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Cafe {
+public class Cafe implements java.io.Serializable {
+    private static final long serialVersionUID = 1L;
+    
     private List<Usuario> usuarios;
     private List<Cliente> clientes;
     private List<Empleado> empleados;
@@ -37,7 +40,12 @@ public class Cafe {
     public Administrador getAdministrador() { return administrador; }
 
     public void agregarMesa(Mesa m) { mesas.add(m); }
-    public void liberarMesa(Mesa m) { mesas.remove(m); }
+    
+    public void liberarMesa(Mesa m) {
+        m.liberar();
+        mesas.remove(m);
+    }
+    
     public List<Mesa> getMesas() { return mesas; }
 
     public void agregarInventarioJuego(InventarioJuegos inv) {
@@ -89,6 +97,27 @@ public class Cafe {
     public List<Venta> getVentas() { return ventas; }
     public List<SolicitudCambioTurno> getSolicitudes() { return solicitudes; }
     public int getCapacidadMaxima() { return capacidadMaxima; }
+
+    // Métodos de persistencia
+    public void guardarEstado(String rutaArchivo) {
+        try {
+            persistencia.Persistencia.guardar(this, rutaArchivo);
+            System.out.println("Estado guardado exitosamente en " + rutaArchivo);
+        } catch (IOException e) {
+            System.err.println("Error al guardar: " + e.getMessage());
+        }
+    }
+
+    public static Cafe cargarEstado(String rutaArchivo) {
+        try {
+            Cafe cafe = persistencia.Persistencia.cargar(rutaArchivo);
+            System.out.println("Estado cargado desde " + rutaArchivo);
+            return cafe;
+        } catch (IOException | ClassNotFoundException e) {
+            System.err.println("Error al cargar: " + e.getMessage());
+            return null;
+        }
+    }
 
     @Override
     public String toString() {

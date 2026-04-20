@@ -42,3 +42,7 @@ public class PruebaCompraJuegos {
         gestorVentas.mostrarHistorialVentas();
 
         System.out.println("====================================");
+        System.out.println("  PRUEBA 4 COMPLETADA");
+        System.out.println("====================================");
+    }
+}

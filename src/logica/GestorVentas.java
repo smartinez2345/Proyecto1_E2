@@ -1,6 +1,8 @@
 package logica;
 
 import modelo.*;
+import java.util.Date;
+import java.util.Calendar;
 
 public class GestorVentas {
 
@@ -33,15 +35,20 @@ public class GestorVentas {
         if (producto instanceof Bebida) {
             Bebida b = (Bebida) producto;
             if (mesa != null && b.isEsAlcoholica() &&
-               (mesa.isTieneMenures5() || mesa.isTieneMenures18())) {
+               (mesa.isTieneMenores5() || mesa.isTieneMenores18())) {
                 System.out.println("ERROR: No se puede vender bebida alcohólica "
                     + "a mesa con menores de edad.");
                 return false;
             }
-            if (mesa != null && b.isEsCaliente() && mesa.tieneJuegoDeAccion()) {
-                System.out.println("ERROR: No se puede vender bebida caliente "
-                    + "a mesa con juego de Acción.");
-                return false;
+            if (mesa != null && b.isEsCaliente()) {
+                // Verificar si la mesa ya tiene juego de acción
+                if (mesa.tieneJuegoDeAccion()) {
+                    System.out.println("ERROR: No se puede vender bebida caliente "
+                        + "a mesa con juego de Acción.");
+                    return false;
+                }
+                // Marcar la mesa con bebida caliente
+                mesa.setTieneBebidaCaliente(true);
             }
         }
 
@@ -62,6 +69,9 @@ public class GestorVentas {
 
     public boolean agregarJuegoAVenta(Venta venta, Juego juego, int cantidad,
                                        double precioUnitario) {
+        // Nota: No hay inventario de juegos para venta en este diseño básico.
+        // Se asume que siempre hay stock. Si quieres controlar stock, debes
+        // agregar un inventario separado para venta de juegos.
         DetalleVenta detalle = new DetalleVenta(cantidad, precioUnitario, null);
         venta.agregarDetalle(detalle);
         System.out.println("Juego agregado a venta: " + juego.getNombre() + " x" + cantidad);
@@ -119,5 +129,94 @@ public class GestorVentas {
         System.out.println("Total ventas juegos: $" + String.format("%.2f", totalJuegos));
         System.out.println("Total ventas cafetería: $" + String.format("%.2f", totalCafeteria));
         System.out.println("================================\n");
+    }
+
+    // --- Informes para administrador ---
+    public void informeDiario(Date fecha) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(fecha);
+        System.out.println("\n===== INFORME DIARIO: " + fecha + " =====");
+        double totalJuegos = 0, totalCafeteria = 0;
+        double impJuegos = 0, impCafeteria = 0;
+        double propinas = 0;
+        for (Venta v : cafe.getVentas()) {
+            Calendar calV = Calendar.getInstance();
+            calV.setTime(v.getFecha());
+            if (calV.get(Calendar.YEAR) == cal.get(Calendar.YEAR) &&
+                calV.get(Calendar.DAY_OF_YEAR) == cal.get(Calendar.DAY_OF_YEAR)) {
+                
+                double subt = v.calcularSubtotal();
+                double imp = v.calcularImpuesto();
+                if (v.getTipoVenta().equals("JUEGOS")) {
+                    totalJuegos += subt;
+                    impJuegos += imp;
+                } else {
+                    totalCafeteria += subt;
+                    impCafeteria += imp;
+                    propinas += v.getPropina();
+                }
+            }
+        }
+        System.out.println("Ventas JUEGOS: $" + String.format("%.2f", totalJuegos) + " + IVA: $" + String.format("%.2f", impJuegos));
+        System.out.println("Ventas CAFETERÍA: $" + String.format("%.2f", totalCafeteria) + " + Imp: $" + String.format("%.2f", impCafeteria) + " + Propinas: $" + String.format("%.2f", propinas));
+        System.out.println("=====================================\n");
+    }
+
+    public void informeSemanal(Date fechaInicio) {
+        Calendar calIni = Calendar.getInstance();
+        calIni.setTime(fechaInicio);
+        calIni.set(Calendar.HOUR_OF_DAY, 0);
+        calIni.set(Calendar.MINUTE, 0);
+        calIni.set(Calendar.SECOND, 0);
+        Calendar calFin = (Calendar) calIni.clone();
+        calFin.add(Calendar.DAY_OF_YEAR, 7);
+        
+        System.out.println("\n===== INFORME SEMANAL desde " + fechaInicio + " =====");
+        double totalJuegos = 0, totalCafeteria = 0;
+        double impJuegos = 0, impCafeteria = 0;
+        double propinas = 0;
+        for (Venta v : cafe.getVentas()) {
+            if (v.getFecha().after(calIni.getTime()) && v.getFecha().before(calFin.getTime())) {
+                double subt = v.calcularSubtotal();
+                double imp = v.calcularImpuesto();
+                if (v.getTipoVenta().equals("JUEGOS")) {
+                    totalJuegos += subt;
+                    impJuegos += imp;
+                } else {
+                    totalCafeteria += subt;
+                    impCafeteria += imp;
+                    propinas += v.getPropina();
+                }
+            }
+        }
+        System.out.println("Ventas JUEGOS: $" + String.format("%.2f", totalJuegos) + " + IVA: $" + String.format("%.2f", impJuegos));
+        System.out.println("Ventas CAFETERÍA: $" + String.format("%.2f", totalCafeteria) + " + Imp: $" + String.format("%.2f", impCafeteria) + " + Propinas: $" + String.format("%.2f", propinas));
+        System.out.println("==============================================\n");
+    }
+
+    public void informeMensual(int mes, int anio) {
+        System.out.println("\n===== INFORME MENSUAL: " + mes + "/" + anio + " =====");
+        double totalJuegos = 0, totalCafeteria = 0;
+        double impJuegos = 0, impCafeteria = 0;
+        double propinas = 0;
+        for (Venta v : cafe.getVentas()) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(v.getFecha());
+            if (cal.get(Calendar.MONTH) + 1 == mes && cal.get(Calendar.YEAR) == anio) {
+                double subt = v.calcularSubtotal();
+                double imp = v.calcularImpuesto();
+                if (v.getTipoVenta().equals("JUEGOS")) {
+                    totalJuegos += subt;
+                    impJuegos += imp;
+                } else {
+                    totalCafeteria += subt;
+                    impCafeteria += imp;
+                    propinas += v.getPropina();
+                }
+            }
+        }
+        System.out.println("Ventas JUEGOS: $" + String.format("%.2f", totalJuegos) + " + IVA: $" + String.format("%.2f", impJuegos));
+        System.out.println("Ventas CAFETERÍA: $" + String.format("%.2f", totalCafeteria) + " + Imp: $" + String.format("%.2f", impCafeteria) + " + Propinas: $" + String.format("%.2f", propinas));
+        System.out.println("========================================\n");
     }
 }

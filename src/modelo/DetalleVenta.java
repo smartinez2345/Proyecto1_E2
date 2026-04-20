@@ -1,9 +1,13 @@
 package modelo;
 
-public class DetalleVenta {
+import java.io.Serializable;
+
+public class DetalleVenta implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
     private int cantidad;
     private double precioUnitario;
-    private ProductoCafeteria producto;
+    private ProductoCafeteria producto;  // null si es juego
 
     public DetalleVenta(int cantidad, double precioUnitario, ProductoCafeteria producto) {
         this.cantidad = cantidad;
