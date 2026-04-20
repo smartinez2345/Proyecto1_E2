@@ -1,0 +1,170 @@
+Diagrama de clases de alto nivel
+@startuml
+skinparam classAttributeIconSize 0
+
+class Cafe
+
+class Usuario
+class Cliente
+class Empleado
+class Administrador
+class Mesero
+class Cocinero
+
+class Juego
+class InventarioJuegos
+
+class ProductoCafeteria
+class Bebida
+class Pasteleria
+class InventarioCafeteria
+
+class Prestamo
+class Mesa
+
+class Venta
+class DetalleVenta
+
+class SolicitudCambioTurno
+
+' Herencia
+Usuario <|-- Cliente
+Usuario <|-- Empleado
+Usuario <|-- Administrador
+Empleado <|-- Mesero
+Empleado <|-- Cocinero
+
+ProductoCafeteria <|-- Bebida
+ProductoCafeteria <|-- Pasteleria
+
+' Relaciones principales
+Cafe --> Usuario
+Cafe --> Juego
+Cafe --> InventarioJuegos
+Cafe --> InventarioCafeteria
+Cafe --> Prestamo
+Cafe --> Venta
+Cafe --> SolicitudCambioTurno
+
+Prestamo --> Juego
+Prestamo --> Mesa
+
+Mesa --> Cliente
+
+Venta --> DetalleVenta
+DetalleVenta --> ProductoCafeteria
+
+InventarioJuegos --> Juego
+InventarioCafeteria --> ProductoCafeteria
+
+SolicitudCambioTurno --> Empleado
+
+@enduml
+
+
+Diagramas de secuencia
+1)préstamo de juegos
+@startuml
+actor Cliente
+participant Cafe
+participant InventarioJuegos
+participant Mesa
+participant Juego
+participant Mesero
+participant Prestamo
+
+Cliente -> Cafe : solicitarPrestamo(juego, mesa)
+
+Cafe -> InventarioJuegos : verificarDisponibilidad(juego)
+Cafe -> Mesa : validarCapacidad()
+Cafe -> Juego : validarRestricciones()
+
+alt Juego dificil
+    Cafe -> Mesero : verificarDisponibilidad()
+end
+
+Cafe -> Prestamo : crearPrestamo()
+Prestamo -> InventarioJuegos : reducirStock()
+
+Cafe -> Cliente : confirmarPrestamo()
+
+@enduml
+
+2)Venta de producto
+@startuml
+actor Cliente
+participant Cafe
+participant InventarioCafeteria
+participant Venta
+participant DetalleVenta
+
+Cliente -> Cafe : realizarVenta(productos)
+
+Cafe -> InventarioCafeteria : verificarStock()
+
+loop por cada producto
+    Cafe -> DetalleVenta : crearDetalle()
+end
+
+Cafe -> Venta : crearVenta()
+Venta -> Venta : calcularImpuestos()
+Venta -> Venta : calcularPropina()
+
+Cafe -> InventarioCafeteria : actualizarStock()
+
+Cafe -> Cliente : confirmarVenta()
+
+@enduml
+
+3) cambio de turno
+@startuml
+actor Empleado
+participant Cafe
+participant SolicitudCambioTurno
+participant Administrador
+
+Empleado -> Cafe : solicitarCambioTurno()
+
+Cafe -> SolicitudCambioTurno : crearSolicitud()
+
+Cafe -> Administrador : notificarSolicitud()
+
+Administrador -> Cafe : aprobar/rechazar()
+
+Cafe -> Empleado : notificarResultado()
+
+@enduml
+
+Diagramas de estados
+préstamo
+
+@startuml
+[*] --> Disponible
+
+Disponible --> Reservado : solicitarPrestamo
+Reservado --> Activo : confirmarPrestamo
+
+Activo --> Finalizado : devolverJuego
+Activo --> Vencido : noDevueltoEnTiempo
+
+Vencido --> Perdido : marcarComoRobado
+Vencido --> Finalizado : devolverJuego
+
+Finalizado --> Disponible : actualizarInventario
+
+Perdido --> [*]
+
+@enduml
+venta
+@startuml
+[*] --> Creada
+
+Creada --> EnProceso : agregarProductos
+EnProceso --> Calculada : calcularTotales
+
+Calculada --> Pagada : confirmarVenta
+Pagada --> Registrada : guardarVenta
+
+Registrada --> [*]
+
+@enduml
